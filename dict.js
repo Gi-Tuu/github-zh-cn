@@ -14,6 +14,53 @@
   "use strict";
 
   const EXACT = {
+    // ==== 新增：协作者与访问（真实登录态采集） ====
+    "add people": "添加成员",
+    "add to repository": "添加到仓库",
+    "collaborators and teams": "协作者与团队",
+    "manage access": "管理访问权限",
+    "public repository": "公开仓库",
+    "search by username, full name, or email": "按用户名、姓名或邮箱搜索",
+    "you haven't invited any collaborators yet": "你还没有邀请任何协作者",
+    // ==== 新增：互动限制（真实登录态采集） ====
+    "add users": "添加用户",
+    "add users to bypass list": "将用户加入豁免名单",
+    "bypass list": "豁免名单",
+    "limit open pull requests from users without write access": "限制无写入权限用户开启拉取请求",
+    "limit to existing users": "仅限已有用户",
+    "limit to prior contributors": "仅限既往贡献者",
+    "limit to repository collaborators": "仅限仓库协作者",
+    "maximum open pull requests per user": "每位用户可开启的拉取请求上限",
+    "pull request limits": "拉取请求限制",
+    "temporary interaction restrictions": "临时互动限制",
+    // ==== 新增：标签保护（真实登录态采集） ====
+    "protected tags": "受保护的标签",
+    "protected tags have been deprecated": "受保护的标签已被弃用",
+    // ==== 新增：Actions 通用设置（真实登录态采集） ====
+    "actions permissions": "Actions 权限",
+    "allow github actions to create and approve pull requests": "允许 GitHub Actions 创建并批准拉取请求",
+    "allow actions created by github": "允许 GitHub 创建的 Actions",
+    "allow all actions and reusable workflows": "允许所有 Actions 与可复用工作流",
+    "allow or block specified actions and reusable workflows": "允许或阻止指定的 Actions 与可复用工作流",
+    "approval for running fork pull request workflows from contributors": "分叉拉取请求工作流的贡献者运行审批",
+    "artifact and log retention": "制品与日志保留期",
+    "disable actions": "禁用 Actions",
+    "read and write permissions": "读写权限",
+    "read repository contents and packages permissions": "读取仓库内容与软件包权限",
+    "require actions to be pinned to a full-length commit sha": "要求 Actions 固定在完整提交 SHA 上",
+    "require approval for all external contributors": "要求对所有外部贡献者审批",
+    "require approval for first-time contributors": "要求对首次贡献者审批",
+    "require approval for first-time contributors who are new to github": "要求对初次使用 GitHub 的新贡献者审批",
+    "workflow permissions": "工作流权限",
+    // ==== 新增：空状态提示（真实登录态采集） ====
+    "there are no deploy keys for this repository": "此仓库没有部署密钥",
+    "there are no runners configured": "尚未配置运行器",
+    // ==== 新增：MCP 服务器设置（真实登录态采集） ====
+    "learn more about configuring mcp servers.": "了解如何配置 MCP 服务器。",
+    "mcp configuration": "MCP 配置",
+    "save mcp configuration": "保存 MCP 配置",
+    "supported agents": "支持的智能体",
+    "your configuration will be validated on save.": "你的配置将在保存时进行校验。",
     // ==== 新增：分支保护与规则集（真实登录态采集） ====
     "add branch ruleset": "添加分支规则集",
     "add classic branch protection rule": "添加经典分支保护规则",
