@@ -1,0 +1,4 @@
+# 统一行尾：仓库与检出都用 LF（Windows 上的 autocrlf 会把扩展文件改成 CRLF）
+* text=auto eol=lf
+*.png binary
+*.ico binary

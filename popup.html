@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>GitHub 界面汉化助手</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="icons/icon48.png" alt="" width="24" height="24">
+    <h1>GitHub 界面汉化</h1>
+  </header>
+
+  <section class="row">
+    <div class="row-text">
+      <div class="row-title">启用界面汉化</div>
+      <div class="row-sub">菜单 · 按钮 · 标签</div>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="toggle">
+      <span class="slider"></span>
+    </label>
+  </section>
+
+  <section class="stat">
+    <span id="count">—</span>
+    <span class="stat-label">处界面已汉化</span>
+  </section>
+
+  <footer>
+    仅翻译界面外壳，不碰代码、README、议题正文与评论；
+    离线词典运行，不联网、不上传任何内容。
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
