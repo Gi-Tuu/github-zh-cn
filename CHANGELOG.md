@@ -1,5 +1,22 @@
 # 更新记录 · Changelog
 
+### 1.12.0（分支保护规则表单 + 规则集编辑器，+68 条）
+
+- 词典 778 → **846 条**：分支保护规则表单 29 条、规则集编辑器 39 条。零术语冲突。
+- **上一版说「要建一条规则才采得到」是错的**：那张表单点进去就是独立路由
+  `/settings/branch_protection_rules/new`，规则集编辑器也在 `/settings/rules/new` ——
+  **全程只点导航，没点过任何「创建 / 保存」**。已用 API 复核仓库确实没被改动：
+  `rulesets` 返回 0 条，`branches/main/protection` 返回 `Branch not protected`。
+- 这一批是词典里密度最高的一屏：合并前要求提交拉取请求 / 要求批准 / 合并前所需的批准数量：/
+  推送新提交时撤销已过期的拉取请求批准 / 要求代码所有者审查 / 合并前要求分支保持最新 /
+  要求状态检查通过 / 要求线性历史 / 要求签名提交 / 阻止强制推送 / 限制创建、更新、删除 /
+  豁免名单为空 / 应匹配哪些分支？/ 对所有人生效（含管理员）…
+- 不收的：`Your GitHub Free plan` + `can only enforce rules on its public repositories, like this one.`
+  + `for more information.`（一句被链接切断的套餐提示）、`Settings: Gi-Tuu/AMBRACE`（含仓库名）、
+  分支名 `github-pages`。
+- 术语沿用既有口径：`review` 一律**审查**（要求代码所有者审查 / 自动请求 Copilot 代码审查），
+  `force push` 统一**强制推送**（7 条同词），`bypass` 统一**豁免**。
+
 ### 1.11.0（设置子页第二批：9 页）
 
 - 词典 737 → **778 条（+41）**，零术语冲突（41 条全是新键，既有条目一条没动）。

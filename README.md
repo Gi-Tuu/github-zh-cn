@@ -1,7 +1,7 @@
 # GitHub 界面汉化助手 · GitHub UI 简体中文汉化包
 
-![UI strings](https://img.shields.io/badge/UI%20strings-778-brightgreen)
-![version](https://img.shields.io/badge/version-1.11.0-blue)
+![UI strings](https://img.shields.io/badge/UI%20strings-846-brightgreen)
+![version](https://img.shields.io/badge/version-1.12.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![offline](https://img.shields.io/badge/network-none-lightgrey)
 
@@ -10,7 +10,7 @@
 
 **EN — TL;DR.** A Chrome / Edge extension that translates only GitHub's *UI chrome*
 (menus, buttons, tabs, counters, tooltips) into Simplified Chinese, using a hand-collected
-offline dictionary of **778** exact-match strings plus numeric patterns like `12 open`.
+offline dictionary of **846** exact-match strings plus numeric patterns like `12 open`.
 It deliberately never touches code, diffs, README/Wiki bodies, issue & PR titles, comment
 bodies, file paths or usernames — those are held out by a **59-selector** blocklist, and
 each selector was verified with `closest()` against the live logged-in DOM. No network,
