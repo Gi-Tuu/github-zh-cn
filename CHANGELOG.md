@@ -1,5 +1,24 @@
 # 更新记录 · Changelog
 
+### 1.10.0（仓库设置的 6 个子页：分支保护 / 规则集 / 密钥与环境 / Pages / 高级安全 / 通知）
+
+- 词典 676 → **737 条（+61）**。高级安全设置页最肥（27 条：推送保护 / 密钥保护 / 私密漏洞报告 /
+  分组安全更新 / 高危及以上 / 仅严重 / CodeQL 默认配置 / 已启用令牌扫描 / 配置 / 工具…），
+  其次 Pages 设置 13 条（构建与部署 / 从分支部署 / 自定义域名 / 强制 HTTPS / 取消发布站点 / 可见性…）、
+  密钥与环境 10 条、分支保护与规则集 7 条、通知设置 4 条。
+- 采集方式改了一刀：**只遍历 `<main>` 里的文本节点**，顶栏 / 页脚 / 设置侧栏的重复噪声被滤掉，
+  每页候选从原来的 150 条降到 14–47 条，信噪比高得多，也更便宜复核。
+- **空状态的限制要说清楚**：分支保护与规则集这两页在你仓库里是空的，所以只采到入口按钮。
+  真正的**规则表单**（要求拉取请求审查 / 所需的批准审查数 / 阻止强制推送 / 包括管理员 /
+  状态检查要求…几十条）只有**创建一条规则之后**才会渲染出来。那是写操作，我没替你做。
+- 术语沿用词典既有口径：`Disable` 保持**禁用**（我初稿写的「停用」作废）、`Enable` = 启用。
+- 故意不收录：`Custom domains allow you to serve your site from a domain other than`
+  （句尾接链接的片段）、`Settings: Gi-Tuu/AMBRACE`（含仓库名）、分支名 `main` / `gh-pages`、
+  品牌词 GitHub Actions / GitHub Pages / CodeQL / Dependabot（组合词条只翻中文那半截）。
+- 还没采的设置子页：Collaborators、Interaction limits、Code review limits、Tags、
+  Actions 通用、Runners、Policies、OIDC、Webhooks、Deploy keys、Codespaces、GitHub Apps、
+  Dependabot 密钥。这些多数也是空状态，等里面有数据再采收益更高。
+
 ### 1.9.0（仓库内四页：安全 / 洞察 / 设置 / 拉取请求列表）
 
 - 触发点：装上 1.8.0 之后，**导航条是中文了，点进去的页面还是英文**——因为
