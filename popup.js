@@ -2,6 +2,7 @@
 "use strict";
 
 const toggle = document.getElementById("toggle");
+const docsToggle = document.getElementById("docsToggle");
 const countEl = document.getElementById("count");
 
 function currentTab() {
@@ -11,12 +12,14 @@ function currentTab() {
 }
 
 function isGitHub(url) {
-  return /^https:\/\/(gist\.)?github\.com\//.test(url || "");
+  return /^https:\/\/(gist\.)?github\.com\//.test(url || "") ||
+    /^https:\/\/docs\.github\.com\//.test(url || "");
 }
 
 async function refresh() {
-  const { enabled } = await chrome.storage.local.get({ enabled: true });
-  toggle.checked = !!enabled;
+  const cfg = await chrome.storage.local.get({ enabled: true, docsAutoZh: true });
+  toggle.checked = !!cfg.enabled;
+  docsToggle.checked = !!cfg.docsAutoZh;
 
   const tab = await currentTab();
   if (!tab || !isGitHub(tab.url)) {
@@ -46,6 +49,10 @@ toggle.addEventListener("change", async () => {
   }
   // 关闭时页面会重载；启用时即时替换。稍后刷新计数。
   setTimeout(refresh, 250);
+});
+
+docsToggle.addEventListener("change", async () => {
+  await chrome.storage.local.set({ docsAutoZh: docsToggle.checked });
 });
 
 refresh();

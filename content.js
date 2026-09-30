@@ -57,7 +57,15 @@
 
   function replaceNode(node) {
     const raw = node.nodeValue;
-    const out = DICT.lookup(raw);
+    let out = DICT.lookup(raw);
+    if (!out) {
+      // 回退：短信国家码下拉的「国名 +区号」——译国名、保留区号
+      const m = raw.match(/^(\s*)(.*?)\s*\+(\d+)(\s*)$/);
+      if (m) {
+        const head = DICT.lookup(m[2]);
+        if (head) out = head + " +" + m[3];
+      }
+    }
     if (!out) return 0;
     const lead = (raw.match(/^\s*/) || [""])[0];
     const trail = (raw.match(/\s*$/) || [""])[0];
@@ -88,6 +96,37 @@
     while ((node = walker.nextNode())) {
       n += replaceNode(node);
     }
+    n += translateAttributes(root);
+    return n;
+  }
+
+  // —— 属性翻译：title / aria-label / aria-description / placeholder（图标按钮 tooltip） ——
+  const ATTR_NAMES = ["title", "aria-label", "aria-description", "placeholder"];
+  const ATTR_SEL = ATTR_NAMES.map(a => "[" + a + "]").join(",");
+  // 属性翻译只排除代码/正文内容区；input/textarea 的 placeholder 与控件 aria-label 属于界面外壳，予以翻译
+  const ATTR_EXCLUDE_SEL = [
+    "pre", "code", ".highlight", ".blob-code", ".blob-wrapper", ".blob-expanded",
+    ".diff-view", ".file-diff", ".CodeMirror", ".cm-editor", ".monaco-editor",
+    ".code-search-results", ".markdown-body", ".markdown-format",
+    ".comment-body", ".js-comment-body", ".wiki-body", ".feed-item-content"
+  ].join(",");
+  function isAttrExcluded(el) {
+    return !!(el && el.closest && el.closest(ATTR_EXCLUDE_SEL));
+  }
+  function translateAttributes(root) {
+    if (!root || !root.querySelectorAll) return 0;
+    let n = 0;
+    const list = Array.from(root.querySelectorAll(ATTR_SEL));
+    if (root.matches && root.matches(ATTR_SEL)) list.unshift(root);
+    for (const el of list) {
+      if (isAttrExcluded(el)) continue;
+      for (const attr of ATTR_NAMES) {
+        const v = el.getAttribute(attr);
+        if (!v) continue;
+        const t = DICT.lookup(v);
+        if (t && t !== v) { el.setAttribute(attr, t); n++; }
+      }
+    }
     return n;
   }
 
@@ -112,9 +151,87 @@
     }
   }
 
+  // —— SPA 导航感知：History API hook + URL 轮询兜底 + 阶梯延迟全量重扫 ——
+  // 解决 GitHub React 版客户端路由（pushState）后 turbo 事件不触发、
+  // 以及 React 异步/分片渲染晚于首屏扫描导致的大面积漏翻（设置页尤甚）。
+  let navHooksInstalled = false;
+  const stagedDelays = [150, 450, 1100, 2400];
+  let stagedTimers = [];
+  let navRafPending = false;
+  let lastUrl = location.href;
+
+  function clearStaged() {
+    for (const t of stagedTimers) clearTimeout(t);
+    stagedTimers = [];
+  }
+
+  // 导航/渲染后：下一帧先扫一次 + 阶梯延迟多次全量扫描，覆盖 React 异步提交
+  function requestStagedRescan() {
+    if (!navRafPending) {
+      navRafPending = true;
+      requestAnimationFrame(function () {
+        navRafPending = false;
+        count += translateSubtree(document.body);
+      });
+    }
+    clearStaged();
+    for (const d of stagedDelays) {
+      stagedTimers.push(setTimeout(function () {
+        count += translateSubtree(document.body);
+      }, d));
+    }
+  }
+
+  function onLocationMaybeChanged() {
+    const url = location.href;
+    if (url === lastUrl) return;
+    lastUrl = url;
+    requestStagedRescan();
+  }
+
+  function installNavigationHooks() {
+    if (navHooksInstalled) return;
+    navHooksInstalled = true;
+
+    // Hook history.pushState / replaceState（React Router 等客户端路由）
+    const origPush = history.pushState;
+    history.pushState = function () {
+      const r = origPush.apply(this, arguments);
+      onLocationMaybeChanged();
+      return r;
+    };
+    const origReplace = history.replaceState;
+    history.replaceState = function () {
+      const r = origReplace.apply(this, arguments);
+      onLocationMaybeChanged();
+      return r;
+    };
+    window.addEventListener("popstate", onLocationMaybeChanged);
+
+    // 兜底：轻量 URL 轮询（仅比较字符串，开销可忽略），捕获未覆盖的导航
+    setInterval(onLocationMaybeChanged, 500);
+  }
+
+  // docs.github.com：若该页存在官方简体中文版（顶部横幅链接），自动跳转，正文 100% 中文化
+  function maybeRedirectDocsZh() {
+    if (location.hostname !== "docs.github.com") return;
+    if (/^\/zh(\/|$)/.test(location.pathname)) return;
+    const link = document.querySelector('a[href^="/zh/"]');
+    if (!link) return;
+    const href = link.getAttribute("href");
+    try {
+      chrome.storage.local.get({ docsAutoZh: true }, (cfg) => {
+        if (cfg.docsAutoZh && href) location.replace(href);
+      });
+    } catch (e) { /* storage 不可用时不跳转 */ }
+  }
+
   function start() {
     if (active) return;
     active = true;
+
+    // 文档站：自动转官方简体中文（在翻译前跳转，避免英文闪烁）
+    maybeRedirectDocsZh();
 
     // 首屏全量
     count += translateSubtree(document.body);
@@ -131,20 +248,31 @@
           });
         } else if (m.type === "characterData") {
           schedule(m.target);
+        } else if (m.type === "attributes") {
+          // 图标按钮 tooltip / placeholder 被动态更新（React 重渲染）
+          if (m.target && m.target.nodeType === Node.ELEMENT_NODE) schedule(m.target);
         }
       }
     });
     observer.observe(document.body, {
       childList: true,
       subtree: true,
-      characterData: true
+      characterData: true,
+      attributes: true,
+      attributeFilter: ATTR_NAMES
     });
 
     // SPA 导航（新版 turbo / 遗留 pjax）
     [
       "turbo:render", "turbo:load", "turbo:frame-render",
       "pjax:end", "pjax:success"
-    ].forEach((ev) => document.addEventListener(ev, () => schedule(document.body)));
+    ].forEach((ev) => document.addEventListener(ev, requestStagedRescan));
+
+    // History API hook + URL 轮询兜底（React 客户端路由，设置页关键）
+    installNavigationHooks();
+
+    // 首屏兜底：React 异步/分片渲染可能晚于上面的首屏全量，做阶梯重扫
+    requestStagedRescan();
   }
 
   // —— 与 popup 通信 ——

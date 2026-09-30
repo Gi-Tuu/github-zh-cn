@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "GitHub 界面汉化助手",
   "short_name": "GH 汉化",
-  "version": "1.12.0",
+  "version": "1.30.0",
   "description": "精确汉化 GitHub 的菜单、按钮与标签（离线词典、零延迟、不联网）；不碰代码、README、议题正文与评论，只翻译界面外壳。",
   "icons": {
     "16": "icons/icon16.png",
@@ -22,12 +22,18 @@
     {
       "matches": [
         "https://github.com/*",
-        "https://gist.github.com/*"
+        "https://gist.github.com/*",
+        "https://docs.github.com/*"
       ],
-      "js": ["dict.js", "content.js"],
+      "js": [
+        "dict.js",
+        "content.js"
+      ],
       "run_at": "document_idle",
       "all_frames": false
     }
   ],
-  "permissions": ["storage"]
+  "permissions": [
+    "storage"
+  ]
 }
