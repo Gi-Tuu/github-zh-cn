@@ -4437,13 +4437,60 @@
     "I understand, revoke access": "我明白，撤销访问权限",
     "Set policy to default workflow token permission to read for": "已将默认工作流令牌权限策略设置为只读，仓库：",
     "Set policy to default workflow token can create or approve PR to false for": "已将默认工作流令牌可创建或批准拉取请求的策略设置为否，仓库：",
-    "a merge setting": "一项合并设置"
+    "a merge setting": "一项合并设置",
+    // ==== 新增：提交 / 部署 / 差异视图（真实采集，v1.31） ====
+    "unverified": "未验证",
+    "resend verification email": "重发验证邮件",
+    "latest deployments": "最新部署",
+    "filter files...": "筛选文件…",
+    "search within code": "在代码中搜索",
+    "view file": "查看文件",
+    "filter options": "筛选选项",
+    "file extensions": "文件扩展名",
+    "browse files": "浏览文件",
+    "browse the repository at this point in the history": "浏览此历史时间点的仓库",
+    "copy file name to clipboard": "复制文件名到剪贴板",
+    "lock": "锁定",
+    "unsubscribe": "取消订阅",
+    "you're receiving notifications because you're subscribed to this thread.": "你已订阅此对话，因此会收到通知。",
+    "2-up": "双图并排",
+    "swipe": "滑动",
+    "onion skin": "洋葱皮",
+    "collapse file tree": "折叠文件树",
+    "expand file tree": "展开文件树",
+    "open diff view settings": "打开差异视图设置",
+    "layout": "布局",
+    "unified": "统一",
+    "split": "拆分",
+    "minimize comments": "最小化评论",
+    "hide whitespace": "隐藏空白字符",
+    "compact line height": "紧凑行高"
   };
 
   // 数字 token：12 / 1,234 / 1.2k / 3M
   const N = "(\\d[\\d.,]*\\s*[kKmM]?)";
 
+  // 相对时间单位 / 月份缩写（部署、活动流、提交列表的纯文本时间）
+  const TU = { second: "秒", minute: "分钟", hour: "小时", day: "天", week: "周", month: "个月", year: "年" };
+  const MON = { jan: "1", feb: "2", mar: "3", apr: "4", may: "5", jun: "6", jul: "7", aug: "8", sep: "9", oct: "10", nov: "11", dec: "12" };
+  const MON_RE = "jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec";
+  const relAgo = function (m, n, u) { return n + " " + TU[u] + "前"; };
+  const fmtMD = function (m, mo, d) { return MON[mo] + "月" + d + "日"; };
+
   const RULES = [
+    // —— 提交 / 部署 / 差异视图（v1.31，具体规则在前） ——
+    [new RegExp("^last deployed on (" + MON_RE + ") (\\d+)$"), function (m, mo, d) { return "上次部署于 " + fmtMD(m, mo, d); }],
+    [/^last deployed (\d+) (second|minute|hour|day|week|month|year)s? ago$/, function (m, n, u) { return "上次部署于 " + relAgo(m, n, u); }],
+    [/^last deployed just now$/, "上次部署于刚刚"],
+    [/^last deployed yesterday$/, "上次部署于昨天"],
+    [/^(\d+) files? changed$/, "$1 个文件变更"],
+    [/^(\d+) parents?$/, "$1 个父提交"],
+    [/^copy full sha for (.+)$/, "复制 $1 的完整 SHA"],
+    [/^expand all lines: (.+)$/, "展开所有行：$1"],
+    [/^collapse all lines: (.+)$/, "折叠所有行：$1"],
+    [new RegExp("^(" + MON_RE + ") (\\d+)$"), fmtMD],
+    [/^(\d+) (second|minute|hour|day|week|month|year)s? ago$/, relAgo],
+    [/^just now$/, "刚刚"],
     [new RegExp("^" + N + "\\s+open$"), "$1 开启"],
     [new RegExp("^" + N + "\\s+closed$"), "$1 已关闭"],
     [new RegExp("^" + N + "\\s+merged$"), "$1 已合并"],

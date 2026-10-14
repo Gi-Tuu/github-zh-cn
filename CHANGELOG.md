@@ -1,5 +1,30 @@
 # 更新记录 · Changelog
 
+### 1.31.0（提交详情 / GitHub Pages 部署 / 文件差异视图，静态 +26 · 动态规则 +12）
+
+- 来源：AMBRACE 仓库的提交详情、github-pages 部署列表、文件 diff 与图片对比页，共 16 张截图采集。
+- **静态 +26**：
+  - 提交签名：`Unverified` 未验证、`Resend verification email` 重发验证邮件。
+  - 部署：`Latest deployments` 最新部署。
+  - 提交文件页：`Filter files...` 筛选文件…、`Search within code` 在代码中搜索、`View file` 查看文件、
+    `Filter options` 筛选选项、`File extensions` 文件扩展名。
+  - 历史浏览：`Browse files` 浏览文件、`Browse the repository at this point in the history` 浏览此历史时间点的仓库。
+  - 文件 tooltip：`Copy file name to clipboard` 复制文件名到剪贴板、`Collapse/Expand file tree` 折叠/展开文件树、
+    `Open diff view settings` 打开差异视图设置。
+  - 评论订阅：`Lock` 锁定（`Lock conversation` 被拆成 Lock + 对话 两个文本节点）、`Unsubscribe` 取消订阅、
+    「你已订阅此对话，因此会收到通知」整句。
+  - 图片对比：`2-up` 双图并排、`Swipe` 滑动、`Onion Skin` 洋葱皮。
+  - diff 设置菜单：`Layout` 布局、`Unified` 统一、`Split` 拆分、`Minimize comments` 最小化评论、
+    `Hide whitespace` 隐藏空白字符、`Compact line height` 紧凑行高。
+- **动态 RULES +12**：相对时间 `N seconds/minutes/hours/days/weeks/months/years ago`
+  → N 秒/分钟/小时/天/周/个月/年前；短日期 `Sep 7 / Aug 30` → 9月7日 / 8月30日；
+  `Last deployed N ago / on Mon D / just now / yesterday` 整句；`N file(s) changed`、`N parent(s)`、
+  `Copy full SHA for {hash}`、`Expand/Collapse all lines: {file}`、`just now`。
+- 不收：环境名 `github-pages`、分支名 `gh-pages`、文件名（index.html / *.svg / *.png）、
+  `.html/.png/.svg` 扩展名筛选项、增删行数（+15 −51）、部署 URL。
+- 验证：`node --check` 双文件通过；46 条 lookup 回测全部通过（含 github-pages / 文件名 / .png
+  三个「不误伤」用例，均正确返回 null）。EXACT 词条总数 3914。
+
 ### 1.12.0（分支保护规则表单 + 规则集编辑器，+68 条）
 
 - 词典 778 → **846 条**：分支保护规则表单 29 条、规则集编辑器 39 条。零术语冲突。
